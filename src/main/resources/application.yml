@@ -1,2 +1,10 @@
 greeting:
-  message: "hello"
+  message: "hello World"
+quarkus:
+  datasource:
+    db-kind: postgresql
+    db-name:
+    username: quarkus_test
+    password: quarkus_test
+    reactive:
+      url: postgresql://localhost:5432/quarkus_test

@@ -5,6 +5,7 @@ plugins {
 }
 
 repositories {
+    maven(url = "https://mvn.dev.eccom.com.cn/repository/public/")
     mavenCentral()
     mavenLocal()
 }
@@ -16,14 +17,15 @@ val quarkusPlatformVersion: String by project
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
-    implementation("io.quarkus:quarkus-reactive-mysql-client")
+    implementation("io.quarkus:quarkus-reactive-pg-client")
     implementation("io.quarkus:quarkus-resteasy-reactive")
     implementation("io.quarkus:quarkus-config-yaml")
     implementation("io.quarkus:quarkus-kotlin")
-    implementation("io.quarkus:quarkus-jdbc-mysql")
+    implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     testImplementation("io.quarkus:quarkus-junit5")
+    implementation("io.smallrye.reactive:mutiny-kotlin:2.4.0")
     testImplementation("io.rest-assured:rest-assured")
 }
 
