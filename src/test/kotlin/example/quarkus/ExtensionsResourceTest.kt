@@ -1,4 +1,4 @@
-package com.example
+package example.quarkus
 
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured

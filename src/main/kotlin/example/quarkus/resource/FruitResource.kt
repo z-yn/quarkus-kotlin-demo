@@ -1,7 +1,7 @@
-package com.example.resource
+package example.quarkus.resource
 
-import com.example.data.Fruits
-import com.example.data.model.Fruit
+import example.quarkus.data.Fruits
+import example.quarkus.data.model.Fruit
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path

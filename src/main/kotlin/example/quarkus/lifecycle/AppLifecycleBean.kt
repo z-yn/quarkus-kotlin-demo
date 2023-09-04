@@ -1,6 +1,6 @@
-package com.example.lifecycle
+package example.quarkus.lifecycle
 
-import com.example.data.Fruits
+import example.quarkus.data.Fruits
 import io.quarkus.runtime.ShutdownEvent
 import io.quarkus.runtime.StartupEvent
 import jakarta.enterprise.context.ApplicationScoped

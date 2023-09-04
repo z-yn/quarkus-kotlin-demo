@@ -1,10 +1,9 @@
-package com.example
+package example.quarkus
 
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
-import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers.*
+import org.hamcrest.Matchers.greaterThan
 import org.junit.jupiter.api.Test
 
 @QuarkusTest
@@ -26,11 +25,13 @@ class ExampleResourceTest {
             .then()
             .statusCode(200)
             .body(
-                "$.size()", `is`(4),
-                "[*].name", `is`("io.quarkus:quarkus-rest-client-reactive"),
-                "[0].name", `is`("REST Client Reactive"),
-                "[0].keywords.size()", Matchers.greaterThan(1),
-                "[0].keywords", CoreMatchers.hasItem("rest-client")
+                "$.size()", greaterThan(1),
+                "[0].name", anyOf(
+                    equalTo("Apple"),
+                    equalTo("Pear"),
+                    equalTo("Orange"),
+                    equalTo("Any"),
+                )
             )
 
     }

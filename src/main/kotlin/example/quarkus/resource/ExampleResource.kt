@@ -1,6 +1,6 @@
-package com.example.resource
+package example.quarkus.resource
 
-import com.example.config.GreetingConfig
+import example.quarkus.config.GreetingConfig
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces

@@ -1,4 +1,4 @@
-package com.example.config
+package example.quarkus.config
 
 import io.smallrye.config.ConfigMapping
 import io.smallrye.config.WithName

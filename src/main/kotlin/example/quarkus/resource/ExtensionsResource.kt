@@ -1,7 +1,7 @@
-package com.example.resource
+package example.quarkus.resource
 
-import com.example.data.client.ExtensionsService
-import com.example.data.model.Extension
+import example.quarkus.data.client.ExtensionsService
+import example.quarkus.data.model.Extension
 import io.smallrye.common.annotation.Blocking
 import io.smallrye.mutiny.Uni
 import jakarta.ws.rs.GET

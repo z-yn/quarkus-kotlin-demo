@@ -1,4 +1,4 @@
-package com.example.data.model
+package example.quarkus.data.model
 
 data class Extension(
     val id: String? = null,

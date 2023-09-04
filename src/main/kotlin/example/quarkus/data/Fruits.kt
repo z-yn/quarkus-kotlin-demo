@@ -1,6 +1,6 @@
-package com.example.data
+package example.quarkus.data
 
-import com.example.data.model.Fruit
+import example.quarkus.data.model.Fruit
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.vertx.mutiny.pgclient.PgPool
 import io.vertx.mutiny.sqlclient.Tuple

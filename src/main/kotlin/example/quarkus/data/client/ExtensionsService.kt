@@ -1,6 +1,6 @@
-package com.example.data.client
+package example.quarkus.data.client
 
-import com.example.data.model.Extension
+import example.quarkus.data.model.Extension
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.inject.Default
 import jakarta.ws.rs.GET
