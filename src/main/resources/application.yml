@@ -8,3 +8,8 @@ quarkus:
     password: quarkus_test
     reactive:
       url: postgresql://localhost:5432/quarkus_test
+  rest-client:
+    extensions-api:
+      url: https://stage.code.quarkus.io/api
+      scope: jakarta.inject.Singleton
+      verify-host: false

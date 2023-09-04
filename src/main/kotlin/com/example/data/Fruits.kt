@@ -1,6 +1,6 @@
-package com.example
+package com.example.data
 
-import com.example.dto.Fruit
+import com.example.data.model.Fruit
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.vertx.mutiny.pgclient.PgPool
 import io.vertx.mutiny.sqlclient.Tuple

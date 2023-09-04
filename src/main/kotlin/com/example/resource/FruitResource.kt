@@ -1,6 +1,7 @@
-package com.example
+package com.example.resource
 
-import com.example.dto.Fruit
+import com.example.data.Fruits
+import com.example.data.model.Fruit
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path

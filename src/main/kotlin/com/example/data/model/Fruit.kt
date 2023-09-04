@@ -1,4 +1,4 @@
-package com.example.dto
+package com.example.data.model
 
 data class Fruit(
     var id: Long? = null,
