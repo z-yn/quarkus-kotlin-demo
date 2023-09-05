@@ -8,6 +8,7 @@ import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import kotlinx.coroutines.flow.Flow
 import org.eclipse.microprofile.rest.client.inject.RestClient
+import org.jboss.resteasy.reactive.RestStreamElementType
 
 
 @Path("fruits")
@@ -22,6 +23,7 @@ class FruitResource(private val fruits: Fruits) {
 
     @GET
     @Path("/asMulti")
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
     fun listMulti(): Multi<Fruit> = fruits.listMulti()
 
     @GET
@@ -37,10 +39,10 @@ class FruitResource(private val fruits: Fruits) {
 
     @GET
     @Path("/byClient/asMulti")
-    fun fromRestClient(): Multi<List<Fruit>> = fruitClient.listMulti()
+    fun fromRestClient(): Multi<Fruit> = fruitClient.listMulti()
 
     @GET
     @Path("/byClient/asFlow")
-    fun fromRestClientFlow(): Flow<Fruit> = fruitClient.listFlow()
+    suspend fun fromRestClientFlow(): List<Fruit> = fruitClient.listFlow()
 
 }
