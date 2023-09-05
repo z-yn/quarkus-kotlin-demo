@@ -1,17 +1,32 @@
 package example.quarkus.resource
 
 import example.quarkus.data.Fruits
+import example.quarkus.data.client.FruitsClient
 import example.quarkus.data.model.Fruit
-import jakarta.ws.rs.GET
-import jakarta.ws.rs.POST
-import jakarta.ws.rs.Path
-import jakarta.ws.rs.PathParam
+import io.smallrye.mutiny.Multi
+import jakarta.ws.rs.*
+import jakarta.ws.rs.core.MediaType
+import kotlinx.coroutines.flow.Flow
+import org.eclipse.microprofile.rest.client.inject.RestClient
 
 
 @Path("fruits")
+@Produces(MediaType.APPLICATION_JSON)
 class FruitResource(private val fruits: Fruits) {
+
+    @RestClient
+    lateinit var fruitClient: FruitsClient
+
     @GET
     suspend fun listAll(): List<Fruit> = fruits.listAll()
+
+    @GET
+    @Path("/asMulti")
+    fun listMulti(): Multi<Fruit> = fruits.listMulti()
+
+    @GET
+    @Path("/asFlow")
+    suspend fun listFlow(): Flow<Fruit> = fruits.listFlow()
 
     @GET
     @Path("{id}")
@@ -19,5 +34,13 @@ class FruitResource(private val fruits: Fruits) {
 
     @POST
     suspend fun add(fruit: Fruit): Long? = fruits.add(fruit)
+
+    @GET
+    @Path("/byClient/asMulti")
+    fun fromRestClient(): Multi<List<Fruit>> = fruitClient.listMulti()
+
+    @GET
+    @Path("/byClient/asFlow")
+    fun fromRestClientFlow(): Flow<Fruit> = fruitClient.listFlow()
 
 }

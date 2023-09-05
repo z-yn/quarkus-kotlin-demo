@@ -1,38 +1,36 @@
 package example.quarkus
 
+import example.quarkus.mutiny.buildUni
 import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.Multi
-import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.helpers.test.AssertSubscriber
+import io.smallrye.mutiny.helpers.test.UniAssertSubscriber
 import org.junit.jupiter.api.Test
-import java.util.*
 
 
 @QuarkusTest
 class MutinyTest {
-    @Test
-    fun testBuilder() {
-        val uni1 = Uni.createFrom().item("hello")
-        val uni2 = uni1.onItem().transform { item: String -> "$item mutiny" }
-        val uni3 = uni2.onItem().transform { obj: String ->
-            obj.uppercase(Locale.getDefault())
-        }
-        uni3.subscribe().with {
-            println(it)
-        }
+
+    fun testUni() {
+        val subscriber = buildUni().subscribe().withSubscriber(UniAssertSubscriber.create())
+        subscriber.assertCompleted().item
     }
 
     @Test
-    fun testDemand() {
-        val fixSubscriber = Multi.createFrom().range(0, 100)
-            .capDemandsTo(50L)
-            .subscribe().withSubscriber(AssertSubscriber.create())
-        fixSubscriber.request(75L).assertNotTerminated()
-        assert(fixSubscriber.items.size == 50)
-        fixSubscriber.request(25L).assertCompleted()
-        assert(fixSubscriber.items.size == 100)
+    fun testFixedDemand() {
+        val sub1 = Multi.createFrom().range(0, 100)
+            .capDemandsTo(50L) //固定大小每次返回50个
+            .subscribe()
+            .withSubscriber(AssertSubscriber.create())
+        sub1.request(75L).assertNotTerminated()
+        assert(sub1.items.size == 50) //第一次请求返回50个
+        sub1.request(25L).assertCompleted()
+        assert(sub1.items.size == 100) //第二次请求返回100个
+    }
 
-        val customizedSubscriber = Multi.createFrom().range(0, 100)
+    @Test
+    fun testDemandUsing() {
+        val sub2 = Multi.createFrom().range(0, 100)
             .capDemandsUsing { n: Long ->
                 if (n > 1) {
                     return@capDemandsUsing (n.toDouble() * 0.75).toLong()
@@ -41,11 +39,11 @@ class MutinyTest {
                 }
             }.subscribe()
             .withSubscriber(AssertSubscriber.create())
-        customizedSubscriber.request(100L).assertNotTerminated()
-        assert(customizedSubscriber.items.size == 75)
-        customizedSubscriber.request(1L).assertNotTerminated()
-        assert(customizedSubscriber.items.size == 94)
-        customizedSubscriber.request(Long.MAX_VALUE).assertCompleted()
-        assert(customizedSubscriber.items.size == 100)
+        sub2.request(100L).assertNotTerminated()
+        assert(sub2.items.size == 75)
+        sub2.request(1L).assertNotTerminated()
+        assert(sub2.items.size == 94)
+        sub2.request(Long.MAX_VALUE).assertCompleted()
+        assert(sub2.items.size == 100)
     }
 }

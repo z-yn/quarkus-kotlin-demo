@@ -1,12 +1,17 @@
 package example.quarkus.data
 
 import example.quarkus.data.model.Fruit
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.vertx.mutiny.pgclient.PgPool
 import io.vertx.mutiny.sqlclient.Tuple
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -31,6 +36,26 @@ class Fruits {
             .execute()
             .awaitSuspending()
             .map {
+                Fruit(it.getLong("id"), it.getString("name"))
+            }
+    }
+
+    fun listMulti(): Multi<Fruit> {
+        return client.query("SELECT id, name FROM fruits ORDER BY name ASC")
+            .execute()
+            .onItem().transformToMulti { Multi.createFrom().iterable(it) }
+            .onItem().transform {
+                Fruit(it.getLong("id"), it.getString("name"))
+            }
+    }
+
+    suspend fun listFlow(): Flow<Fruit> {
+        return client.query("SELECT id, name FROM fruits ORDER BY name ASC")
+            .execute()
+            .awaitSuspending()
+            .asFlow()
+            .map {
+                delay(500)
                 Fruit(it.getLong("id"), it.getString("name"))
             }
     }

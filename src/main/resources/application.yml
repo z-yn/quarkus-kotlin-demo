@@ -13,3 +13,7 @@ quarkus:
       url: https://stage.code.quarkus.io/api
       scope: jakarta.inject.Singleton
       verify-host: false
+    localhost-api:
+      url: http://localhost:8080
+      scope: jakarta.inject.Singleton
+      verify-host: false

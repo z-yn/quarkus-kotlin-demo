@@ -25,4 +25,5 @@ interface ExtensionsService {
 
     @GET
     suspend fun getByIdAsSuspended(@RestQuery id: String): Set<Extension>
+
 }
