@@ -1,5 +1,6 @@
 package example.quarkus.resource
 
+import example.quarkus.annotation.INTERNAL
 import example.quarkus.data.Fruits
 import example.quarkus.data.client.FruitsClient
 import example.quarkus.data.model.Fruit
@@ -23,11 +24,11 @@ class FruitResource(private val fruits: Fruits) {
 
     @GET
     @Path("/asMulti")
-    @RestStreamElementType(MediaType.APPLICATION_JSON)
     fun listMulti(): Multi<Fruit> = fruits.listMulti()
 
-    @GET
+    @INTERNAL
     @Path("/asFlow")
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
     suspend fun listFlow(): Flow<Fruit> = fruits.listFlow()
 
     @GET
@@ -40,9 +41,5 @@ class FruitResource(private val fruits: Fruits) {
     @GET
     @Path("/byClient/asMulti")
     fun fromRestClient(): Multi<Fruit> = fruitClient.listMulti()
-
-    @GET
-    @Path("/byClient/asFlow")
-    suspend fun fromRestClientFlow(): List<Fruit> = fruitClient.listFlow()
 
 }

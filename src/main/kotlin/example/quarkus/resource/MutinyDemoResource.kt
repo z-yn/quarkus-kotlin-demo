@@ -4,6 +4,8 @@ import example.quarkus.data.model.Fruit
 import io.smallrye.mutiny.Multi
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
+import jakarta.ws.rs.core.MediaType
+import org.jboss.resteasy.reactive.RestStreamElementType
 
 @Path("mutiny")
 class MutinyDemoResource {

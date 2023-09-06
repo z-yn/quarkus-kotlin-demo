@@ -28,6 +28,10 @@ dependencies {
     testImplementation("io.quarkus:quarkus-junit5")
     implementation("io.smallrye.reactive:mutiny-kotlin:2.4.0")
     testImplementation("io.rest-assured:rest-assured")
+    //test only
+    // https://mvnrepository.com/artifact/io.quarkus.gizmo/gizmo
+    testImplementation("org.ow2.asm:asm:9.5")
+    testImplementation("io.quarkus.gizmo:gizmo:1.7.0")
 }
 
 group = "com.example"
@@ -40,6 +44,7 @@ java {
 
 tasks.withType<Test> {
     systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
+    jvmArgs = listOf("--add-exports","jdk.internal/org.objectweb.asm=ALL-UNNAMED")
 }
 allOpen {
     annotation("jakarta.ws.rs.Path")
