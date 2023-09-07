@@ -1,26 +1,14 @@
-package example.quarkus
+package example.quarkus.mutiny
 
 import example.quarkus.data.client.SseFruitClient
-import example.quarkus.mutiny.buildUni
 import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.Multi
-import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.helpers.test.AssertSubscriber
-import io.smallrye.mutiny.helpers.test.UniAssertSubscriber
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
-
 @QuarkusTest
-class MutinyTest {
-
-    fun testUni() {
-        val subscriber = buildUni().subscribe().withSubscriber(UniAssertSubscriber.create())
-        subscriber.assertCompleted().item
-    }
-
+class MutinyDemandTest {
     @Test
     fun testFixedDemand() {
         val sub1 = Multi.createFrom()
@@ -58,10 +46,14 @@ class MutinyTest {
     lateinit var sseClient: SseFruitClient
 
     @Test
-    fun testSse() = runBlocking {
-        sseClient.listMulti()
-            .onItem().invoke { it -> println(it) }
-            .asFlow()
-            .collect()
+    fun testSse() {
+        val subscriber = sseClient.listMulti().assertThat()
+        subscriber.awaitItems(10)
+        println(subscriber.items)
+        subscriber.awaitItems(10)
+        println(subscriber.items)
+        subscriber.awaitItems(10)
+        println(subscriber.items)
+
     }
 }

@@ -19,13 +19,13 @@ internal class JandexTest {
     fun indexClass() {
         val index = Index.of(MutableMap::class.java) //索引类Map
         val clazz1 = index.getClassByName(DotName.createSimple("java.util.Map")) //可以从索引中找到类
-        assertTrue(clazz1!=null)
+        assertTrue(clazz1 != null)
         assertTrue(clazz1.methods().isNotEmpty())
         clazz1.methods().forEach { //
             println(it)
         }
         val clazz2 = index.getClassByName(DotName.createSimple("java.util.Set")) //没有索引所以找不到
-        assertTrue(clazz2==null)
+        assertTrue(clazz2 == null)
     }
 
     @Test
@@ -60,7 +60,7 @@ internal class JandexTest {
         val listType = Type.create(DotName.createSimple("java.util.List"), Type.Kind.CLASS)
         val sort = clazz.method("sort", listType) //查找method Collections.sort(java.util.List)
 
-        val type= sort.parameterTypes()[0]// void sort(java.util.List<T> list)
+        val type = sort.parameterTypes()[0]// void sort(java.util.List<T> list)
             .asParameterizedType() // List<T extends Comparable<? super T>>
             .arguments()[0].asTypeVariable() // T extends Comparable<? super T>
             .bounds()[0] // Comparable<? super T>
@@ -84,10 +84,10 @@ internal class JandexTest {
             .arguments()[0] // @Label("Name") String
             .annotations()[0] // @Label("Name")
             .value()
-        assertEquals("Name",nameValue.value());
+        assertEquals("Name", nameValue.value());
         val label = DotName.createSimple("example.quarkus.jandex.Label")
         val annotations = index.getAnnotations(label)
-        assertEquals(1,annotations.size)
+        assertEquals(1, annotations.size)
         for (annotation in annotations) {
             if (annotation.target().kind() == AnnotationTarget.Kind.TYPE) {
                 val typeTarget = annotation.target().asType()
@@ -124,7 +124,7 @@ internal class JandexTest {
 //        index.printAnnotations()
 //        index.printSubclasses()
         val annotations = index.getAnnotations(DotName.createSimple("example.quarkus.jandex.Label"))
-        assertTrue(annotations.isEmpty())
+        assertTrue(annotations.isNotEmpty())
         for (annotation in annotations) {
             if (annotation.target().kind() == AnnotationTarget.Kind.TYPE) {
                 val typeTarget = annotation.target().asType()
@@ -172,7 +172,7 @@ internal class JandexTest {
             indexClass(RestStreamElementType::class.java)
         }.complete()
         val annotations = index.getAnnotations(ComposedAnnotation::class.java.name)
-        assertEquals(1,annotations.size)
+        assertEquals(1, annotations.size)
         val type = index.getClassByName(DeclarationsAndTypes::class.java.name)
         val method = type.method("test")
         val mutableList = method.annotations()
