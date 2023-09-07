@@ -1,6 +1,7 @@
 package example.quarkus.mutiny
 
 import io.quarkus.test.junit.QuarkusTest
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicInteger
@@ -14,8 +15,7 @@ class MutinyUniTest {
     fun testUniBuilder() {
         //支持从元素创建
         Uni.createFrom().item(1)
-            .onItem().transform { "hello-$it" }
-            .assertIs("hello-1")
+            .assertIs(1)
 
         //支持从supplier创建
         val counter = AtomicInteger()
@@ -34,6 +34,25 @@ class MutinyUniTest {
         //支持使用emitter创建
         Uni.createFrom().emitter { it.complete(1) }.assertIs(1)
 
+    }
+
+    @Test
+    fun testTransform() {
+        Uni.createFrom().item("hello")
+            .onItem().transform { it.uppercase() } // shortcut --> map {}
+            .map { "$it-WORLD" }
+            .assertIs("HELLO-WORLD")
+
+        Uni.createFrom().item("hello")
+            .onItem().transformToUni { it ->  // shortcut --> flatmap {} or chain {}
+                Uni.createFrom().item(it).map { it.uppercase() }
+            }.flatMap { Uni.createFrom().item("$it-WORLD") }
+            .assertIs("HELLO-WORLD")
+
+        Uni.createFrom().item("hello")
+            .onItem().transformToMulti {
+                Multi.createFrom().iterable(it.toCharArray().asIterable())
+            }.assertIs('h', 'e', 'l', 'l', 'o')
     }
 
 }

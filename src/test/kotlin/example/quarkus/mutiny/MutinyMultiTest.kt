@@ -71,5 +71,13 @@ class MutinyMultiTest {
             .assertStart(0, 1, 2, 3, 4)
     }
 
+    @Test
+    fun testTransform() {
+        Multi.createFrom().items("a", "b", "c")
+            .onItem().transform { it.uppercase() }
+            .map { "Hello-$it" }
+            .assertIs("Hello-A", "Hello-B", "Hello-C")
+    }
+
 
 }

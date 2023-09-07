@@ -48,10 +48,9 @@ class FruitResource(private val fruits: Fruits) {
     @Path("/sse")
     fun bySSe(): Multi<Fruit> = sseFruitClient.listMulti()
         .map {
-            Thread.sleep(100) //消费速度慢
-            it.apply {
-                Fruit(id, "$name-from-SSE")
-            }
+            println("@${System.currentTimeMillis()} <<< consume ${it.name}")
+            Thread.sleep(100)
+            Fruit(it.id, "${it.name}-from-SSE")
         }
-        .onRequest().invoke { it -> println("request in fruitResource $it") }
+        .onRequest().invoke { it -> println("@${System.currentTimeMillis()} <<< pulled by web $it") }
 }

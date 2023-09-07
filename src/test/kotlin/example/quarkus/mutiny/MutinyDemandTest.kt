@@ -1,9 +1,9 @@
 package example.quarkus.mutiny
 
 import example.quarkus.data.client.SseFruitClient
+import example.quarkus.data.model.Fruit
 import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.Multi
-import io.smallrye.mutiny.helpers.test.AssertSubscriber
 import jakarta.inject.Inject
 import org.junit.jupiter.api.Test
 
@@ -15,8 +15,7 @@ class MutinyDemandTest {
             .range(0, 100)
             .capDemandsTo(50L) //固定大小每次返回50个
             .onRequest().invoke { it -> println(it) }
-            .subscribe()
-            .withSubscriber(AssertSubscriber.create())
+            .assertThat()
         sub1.request(75L).assertNotTerminated()
         assert(sub1.items.size == 50) //第一次请求返回50个
         sub1.request(25L).assertCompleted()
@@ -32,8 +31,7 @@ class MutinyDemandTest {
                 } else {
                     return@capDemandsUsing n
                 }
-            }.subscribe()
-            .withSubscriber(AssertSubscriber.create())
+            }.assertThat()
         sub2.request(100L).assertNotTerminated()
         assert(sub2.items.size == 75)
         sub2.request(1L).assertNotTerminated()
@@ -47,13 +45,13 @@ class MutinyDemandTest {
 
     @Test
     fun testSse() {
-        val subscriber = sseClient.listMulti().assertThat()
-        subscriber.awaitItems(10)
-        println(subscriber.items)
-        subscriber.awaitItems(10)
-        println(subscriber.items)
-        subscriber.awaitItems(10)
-        println(subscriber.items)
-
+        sseClient.listMulti().onRequest()
+            .invoke { it -> println("sse requested $it") }
+            .assertStart(
+                Fruit(0, "fruit-0"),
+                Fruit(1, "fruit-1"),
+                Fruit(2, "fruit-2"),
+                Fruit(3, "fruit-3"),
+            )
     }
 }
