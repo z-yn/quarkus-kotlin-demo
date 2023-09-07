@@ -1,10 +1,15 @@
 package example.quarkus
 
+import example.quarkus.data.client.SseFruitClient
 import example.quarkus.mutiny.buildUni
 import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.Multi
+import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.helpers.test.AssertSubscriber
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber
+import jakarta.inject.Inject
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
 
@@ -18,8 +23,10 @@ class MutinyTest {
 
     @Test
     fun testFixedDemand() {
-        val sub1 = Multi.createFrom().range(0, 100)
+        val sub1 = Multi.createFrom()
+            .range(0, 100)
             .capDemandsTo(50L) //固定大小每次返回50个
+            .onRequest().invoke { it -> println(it) }
             .subscribe()
             .withSubscriber(AssertSubscriber.create())
         sub1.request(75L).assertNotTerminated()
@@ -45,5 +52,16 @@ class MutinyTest {
         assert(sub2.items.size == 94)
         sub2.request(Long.MAX_VALUE).assertCompleted()
         assert(sub2.items.size == 100)
+    }
+
+    @Inject
+    lateinit var sseClient: SseFruitClient
+
+    @Test
+    fun testSse() = runBlocking {
+        sseClient.listMulti()
+            .onItem().invoke { it -> println(it) }
+            .asFlow()
+            .collect()
     }
 }

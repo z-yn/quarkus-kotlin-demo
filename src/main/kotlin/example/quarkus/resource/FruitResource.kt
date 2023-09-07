@@ -1,15 +1,14 @@
 package example.quarkus.resource
 
-import example.quarkus.annotation.INTERNAL
 import example.quarkus.data.Fruits
 import example.quarkus.data.client.FruitsClient
+import example.quarkus.data.client.SseFruitClient
 import example.quarkus.data.model.Fruit
 import io.smallrye.mutiny.Multi
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import kotlinx.coroutines.flow.Flow
 import org.eclipse.microprofile.rest.client.inject.RestClient
-import org.jboss.resteasy.reactive.RestStreamElementType
 
 
 @Path("fruits")
@@ -19,6 +18,9 @@ class FruitResource(private val fruits: Fruits) {
     @RestClient
     lateinit var fruitClient: FruitsClient
 
+    @RestClient
+    lateinit var sseFruitClient: SseFruitClient
+
     @GET
     suspend fun listAll(): List<Fruit> = fruits.listAll()
 
@@ -26,9 +28,8 @@ class FruitResource(private val fruits: Fruits) {
     @Path("/asMulti")
     fun listMulti(): Multi<Fruit> = fruits.listMulti()
 
-    @INTERNAL
+    @GET
     @Path("/asFlow")
-    @RestStreamElementType(MediaType.APPLICATION_JSON)
     suspend fun listFlow(): Flow<Fruit> = fruits.listFlow()
 
     @GET
@@ -42,4 +43,15 @@ class FruitResource(private val fruits: Fruits) {
     @Path("/byClient/asMulti")
     fun fromRestClient(): Multi<Fruit> = fruitClient.listMulti()
 
+
+    @GET
+    @Path("/sse")
+    fun bySSe(): Multi<Fruit> = sseFruitClient.listMulti()
+        .map {
+            Thread.sleep(100) //消费速度慢
+            it.apply {
+                Fruit(id, "$name-from-SSE")
+            }
+        }
+        .onRequest().invoke { it -> println("request in fruitResource $it") }
 }
