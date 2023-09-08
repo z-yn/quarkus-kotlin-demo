@@ -106,6 +106,7 @@ internal class JandexTest {
 
     @Test
     //与Kotlin不兼容,不支持type annotation
+    //Kotlin使用Metadata记录元数据 https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-metadata/
     //https://github.com/smallrye/jandex/issues/284
     fun typeAnnotations() {
         val indexer = Indexer()

@@ -53,4 +53,16 @@ class FruitResource(private val fruits: Fruits) {
             Fruit(it.id, "${it.name}-from-SSE")
         }
         .onRequest().invoke { it -> println("@${System.currentTimeMillis()} <<< pulled by web $it") }
+
+    @GET
+    @Path("/backPress")
+    fun bySSeWithBackPress(): Multi<Fruit> = sseFruitClient.listMulti()
+        .onOverflow().invoke { it-> println("drop $it") }.drop() //不会出现overflow，vert.x会停止生产方生产
+        .onItem().invoke{it->"generated $it"}
+        .map {
+            println("@${System.currentTimeMillis()} <<< consume ${it.name}")
+            Thread.sleep(100)
+            Fruit(it.id, "${it.name}-from-SSE")
+        }
+        .onRequest().invoke { it -> println("@${System.currentTimeMillis()} <<< pulled by web $it") }
 }

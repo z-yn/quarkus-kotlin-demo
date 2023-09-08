@@ -4,6 +4,7 @@ import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import java.util.concurrent.atomic.AtomicInteger
 
 //Uni<T>代表一个只能发出一个元素或一个失败事件的流
@@ -53,6 +54,18 @@ class MutinyUniTest {
             .onItem().transformToMulti {
                 Multi.createFrom().iterable(it.toCharArray().asIterable())
             }.assertIs('h', 'e', 'l', 'l', 'o')
+    }
+
+    @Test
+    fun testDelay() {
+       Uni.createFrom().item("hello")
+            .onItem().delayIt().by(Duration.ofMillis(10))
+           .assertIs("hello")
+
+       Uni.createFrom().item("hello")
+            .onItem().delayIt().until{
+               uniDelay(100)
+            }.assertIs("hello")
     }
 
 }

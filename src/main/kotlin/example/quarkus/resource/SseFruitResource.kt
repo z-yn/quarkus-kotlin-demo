@@ -16,7 +16,7 @@ class SseFruitResource {
         return Multi.createFrom()
             .range(0, 100)
             .map {
-                Thread.sleep(50)
+                Thread.sleep(10)
                 println("@${System.currentTimeMillis()} produced fruit-$it")
                 Fruit(it.toLong(), "fruit-$it")
             }.onRequest().invoke { it ->
