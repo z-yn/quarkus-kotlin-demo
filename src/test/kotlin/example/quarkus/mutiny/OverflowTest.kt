@@ -3,10 +3,15 @@ package example.quarkus.mutiny
 import example.quarkus.data.model.Fruit
 import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.Multi
+import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.infrastructure.Infrastructure
 import io.smallrye.mutiny.subscription.BackPressureFailure
+import io.smallrye.mutiny.subscription.UniEmitter
 import org.junit.jupiter.api.Test
 import java.time.Duration
+import java.util.*
+import java.util.concurrent.Executors
+import kotlin.concurrent.thread
 
 
 @QuarkusTest
@@ -41,6 +46,31 @@ class OverflowTest {
             //The overflow buffer is full, which is due to the upstream sending too many items w.r.t.
             // the downstream capacity and/or the downstream not consuming items fast enough
             .assertFailedWith(BackPressureFailure::class.java)
+    }
+
+    @Test
+    fun testEmitter() {
+      Uni.createFrom().emitter { emitter: UniEmitter<in String> ->
+            thread(
+                name = "Emitter-Thread"
+            ) {
+                emitter.complete(
+                    "hello from " + Thread.currentThread().name
+                )
+            }
+        }.assertIs("hello from Emitter-Thread")
+
+        Uni.createFrom().item { "hello" }.emitOn(Executors.newSingleThreadExecutor().apply {
+
+        })
+            .onItem()
+            .invoke { s ->
+                println(
+                    "Received item `" + s + "` on thread: "
+                            + Thread.currentThread().name
+                )
+            }
+            .await().indefinitely()
     }
 
 //    @Test
