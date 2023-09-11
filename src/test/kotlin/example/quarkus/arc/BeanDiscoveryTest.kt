@@ -79,11 +79,10 @@ class BeanDiscoveryTest {
 
 
         //normal-scoped的bean只有方法调用时才会初始化
-        //@Note:经过测试，发现虽然每次调用方法时会重新初始化。但是实例化的时候也会初始化一次
+        //@Note:经过测试，发现虽然每次调用方法时会重新初始化。但是实例化的时候也会初始化一次,导致测试失败
         //assertFalse(lazyBeanNormalInit)
 
-        //直接初始化Bean
-//        LazyBeanNormalScope::class.java.asBean()
+        //调用时会初始化
         RestAssured.given()
             .`when`().get("/bean-discovery-test/lazy-bean-normal")
             .then()

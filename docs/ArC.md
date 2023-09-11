@@ -28,4 +28,19 @@ Bean包含:
 - pseudo-scope bean，注入的时候就会初始化。
 
 #### Startup事件可以帮助启动时初始化
-- 
+
+- 使用`@io.quarkus.runtime.Startup`注解
+- `@Observes StartupEvent`
+- `@Observes StartupEvent`,方法的额外参数
+
+```java
+
+@Dependent
+class MyBeanStarter {
+    void startup(@Observes StartupEvent event, AmazingService amazing, CoolService cool) {
+        cool.toString();
+    }
+}
+```
+
+
