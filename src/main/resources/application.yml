@@ -1,6 +1,10 @@
 greeting:
   message: "hello World"
 quarkus:
+  nacos:
+    app-id: test
+    type: yaml
+    server-addr: http://10.200.90.84:8848
   datasource:
     db-kind: postgresql
     db-name:

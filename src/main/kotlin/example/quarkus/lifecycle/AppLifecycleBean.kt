@@ -9,12 +9,12 @@ import java.util.logging.Logger
 
 @ApplicationScoped
 class AppLifecycleBean(private val fruit: Fruits) {
-    fun onStart(@Observes ev: StartupEvent?) {
+    fun onStart(@Observes ev: StartupEvent) {
         LOGGER.info("The application is starting...")
         fruit.initDb();
     }
 
-    fun onStop(@Observes ev: ShutdownEvent?) {
+    fun onStop(@Observes ev: ShutdownEvent) {
         LOGGER.info("The application is stopping...")
     }
 

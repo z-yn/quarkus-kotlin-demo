@@ -44,7 +44,7 @@ java {
 
 tasks.withType<Test> {
     systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
-    jvmArgs = listOf("--add-exports","jdk.internal/org.objectweb.asm=ALL-UNNAMED")
+    jvmArgs = listOf("--add-exports", "jdk.internal/org.objectweb.asm=ALL-UNNAMED")
 }
 allOpen {
     annotation("jakarta.ws.rs.Path")
