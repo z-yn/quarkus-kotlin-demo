@@ -25,6 +25,7 @@ dependencies {
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
+    implementation("com.github.alex:quarkus-nacos-client")
     testImplementation("io.quarkus:quarkus-junit5")
     implementation("io.smallrye.reactive:mutiny-kotlin:2.4.0")
     testImplementation("io.rest-assured:rest-assured")
