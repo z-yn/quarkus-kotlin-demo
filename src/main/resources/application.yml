@@ -5,13 +5,11 @@ consul:
   port: 8500
 quarkus:
   stork:
-    adapter-terraform:
+    my-service:
       service-discovery:
-        type: nacos
-        server-addr: 10.200.90.84:8848
-        username: eccom
-        password: Eccom@123
-        nacos-group: DEFAULT_GROUP
+        type: consul
+        consul-host: localhost
+        consul-port: 8500
       load-balancer:
         type: round-robin
   nacos-config:

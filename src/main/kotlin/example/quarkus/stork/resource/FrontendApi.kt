@@ -15,8 +15,8 @@ class FrontendApi {
     lateinit var service: MyService
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    operator fun invoke(): Any {
-        return service.health()
+    @Produces(MediaType.TEXT_PLAIN)
+    operator fun invoke(): String {
+        return service.get()
     }
 }
