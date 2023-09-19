@@ -1,10 +1,26 @@
 greeting:
   message: "hello World"
+consul:
+  host: localhost
+  port: 8500
 quarkus:
-  nacos:
-    app-id: test
-    type: yml
-    server-addr:
+  stork:
+    adapter-terraform:
+      service-discovery:
+        type: nacos
+        server-addr: 10.200.90.84:8848
+        username: eccom
+        password: Eccom@123
+        nacos-group: DEFAULT_GROUP
+      load-balancer:
+        type: round-robin
+  nacos-config:
+    enabled: true
+    app-id: demo-example
+    format: yml
+    server-addr: 10.200.90.84:8848
+    username: eccom
+    password: Eccom@123
   datasource:
     db-kind: postgresql
     db-name:

@@ -10,6 +10,16 @@ If you want to learn more about Quarkus, please visit its website: https://quark
  docker run -it --rm=true --name quarkus_test -e POSTGRES_USER=quarkus_test -e POSTGRES_PASSWORD=quarkus_test -e POSTGRES_DB=quarkus_test -p 5432:5432 postgres:14.1
 ```
 
+## prepare consul
+
+```shell
+docker run \
+    -d \
+    -p 8500:8500 \
+    -p 8600:8600/udp \
+    hashicorp/consul agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
+```
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
