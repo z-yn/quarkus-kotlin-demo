@@ -29,7 +29,6 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     implementation("io.smallrye.stork:stork-service-discovery-consul")
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-consul-client")
-    implementation("com.github.alex:quarkus-nacos-client:1.0.0-SNAPSHOT")
     testImplementation("io.quarkus:quarkus-junit5")
     implementation("io.smallrye.reactive:mutiny-kotlin:2.4.0")
     testImplementation("io.rest-assured:rest-assured")
